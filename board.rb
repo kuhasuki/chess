@@ -29,4 +29,27 @@ class Board
     end
   end
 
+  def move(start, end_pos)
+    raise "No piece at selected starting position" if self[start].nil?
+    raise "Invalid move" unless valid_move?(start, end_pos)
+
+    piece = self[start]
+    self[end_pos], self[start] = piece, nil
+    piece.position = end_pos
+  end
+
+  def valid_move?(start, end_pos)
+    piece = self[start]
+    piece.moves.include?(end_pos)
+  end
+
+  def [](position)
+    row, col = position
+    @grid[row][col]
+  end
+
+  def []=(position, piece)
+    row, col = position
+    @grid[row][col] = piece
+  end
 end
