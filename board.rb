@@ -1,10 +1,10 @@
 class Board
   def initialize
     @grid = Array.new(8) { Array.new(8) }
-    new_board
+    populate_board
   end
 
-  def new_board
+  def populate_board
     insert_high_court(0, :black)
     insert_pawns(1, :black)
 
