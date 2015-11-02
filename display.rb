@@ -41,6 +41,3 @@ class Display
     build_grid.each { |row| puts row.join }
   end
 end
-
-b = Board.new
-Display.new(b).render

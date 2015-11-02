@@ -44,13 +44,14 @@ class Board
     raise "Invalid move" unless valid_move?(start, end_pos)
 
     piece = self[start]
-    self[end_pos], self[start] = piece, nil
+    self[end_pos], self[start] = piece, NilPiece.new
     piece.position = end_pos
   end
 
   def valid_move?(start, end_pos)
     piece = self[start]
-    piece.moves.include?(end_pos)
+    possible_moves = piece.moves(start)
+    possible_moves.include?(end_pos)
   end
 
   def [](position)
@@ -61,5 +62,9 @@ class Board
   def []=(position, piece)
     row, col = position
     @grid[row][col] = piece
+  end
+
+  def in_bounds?(pos)
+    pos.all? { |x| x.between?(0, 7) }
   end
 end
