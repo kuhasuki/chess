@@ -1,16 +1,22 @@
 require_relative 'piece'
+require_relative 'sliding_piece'
 
 class Queen < Piece
-  attr_accessor :position
+  include SlidingPiece
 
-  def initialize(board, position, color = :black)
-    @board = board
-    @position = position
-    @color = color
-  end
+  DELTAS = [
+    [-1, -1],
+    [1, 1],
+    [-1, 1],
+    [1, -1],
+    [-1, 0],
+    [1, 0],
+    [0, 1],
+    [0, -1]
+  ]
 
-  def inspect
-    (self.class).inspect
+  def deltas
+    DELTAS
   end
 
   def to_s
