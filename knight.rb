@@ -1,5 +1,5 @@
 require_relative 'piece'
-require_relative 'steppingpiece'
+require_relative 'stepping_piece'
 
 class Knight < Piece
   include SteppingPiece
@@ -14,6 +14,10 @@ class Knight < Piece
     [ 2, -1],
     [ 2,  1]
   ]
+
+  def deltas
+    DELTAS
+  end
 
   def to_s
     icon = "\u2658".encode("utf-8")

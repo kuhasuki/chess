@@ -1,16 +1,21 @@
 require_relative 'piece'
 
 class King < Piece
-  attr_accessor :position
+  include SteppingPiece
 
-  def initialize(board, position, color = :black)
-    @board = board
-    @position = position
-    @color = color
-  end
+  DELTAS = [
+    [-1, -1],
+    [-1,  0],
+    [-1, 1],
+    [ 0,  -1],
+    [ 0, 1],
+    [ 1,  -1],
+    [ 1, 0],
+    [ 1,  1]
+  ]
 
-  def inspect
-    (self.class).inspect
+  def deltas
+    DELTAS
   end
 
   def to_s
