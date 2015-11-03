@@ -36,11 +36,18 @@ class Display
     { background: bg, color: color }
   end
 
+  def render_message
+    black = "Black Material: #{@board.black_value}"
+    white = "White Material: #{@board.white_value}"
+
+    "#{black} | #{white}"
+  end
+
   def render
     system("clear")
     puts "Command Line Chess 2k15"
     puts "Arrow keys or WASD to move, space or enter to select."
-    puts "#{@message}"
+    puts "#{render_message}"
     build_grid.each { |row| puts row.join }
   end
 end

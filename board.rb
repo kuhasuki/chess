@@ -7,20 +7,24 @@ require_relative 'pawn'
 require_relative 'nil_piece'
 
 class Board
-  attr_accessor :grid
+  attr_accessor :grid, :black_value, :white_value
+
+  MATERIAL_VALUES = {Pawn: 1, Bishop: 3, Knight: 3, Rook: 5, Queen: 9, King: 0}
 
   def initialize(original = true)
     @grid = Array.new(8) { Array.new(8) { NilPiece.new } }
-    populate_board if original
+    @black_value, @white_value = 0, 0
+    if original
+      populate_board
+      update_values
+    end
   end
 
   def dup
     duped_board = self.class.new(false)
-    @grid.each do |rows|
-      rows.each do |piece|
-        unless piece.color.nil?
-          duped_board[piece.position] = piece.dup(duped_board)
-        end
+    @grid.flatten.each do |piece|
+      unless piece.color.nil?
+        duped_board[piece.position] = piece.dup(duped_board)
       end
     end
     duped_board
@@ -61,6 +65,7 @@ class Board
     piece = self[start]
     self[end_pos], self[start] = piece, NilPiece.new
     piece.position = end_pos
+    update_values
   end
 
   def valid_move?(start, end_pos)
@@ -72,12 +77,10 @@ class Board
 
   def in_check?(color)
     king_position = find_king(color)
-    @grid.each do |rows|
-      rows.each do |piece|
-        if piece.enemy_of?(color)
-          if piece.possible_move_set.include?(king_position)
-            return true
-          end
+    @grid.flatten.each do |piece|
+      if piece.enemy_of?(color)
+        if piece.possible_move_set.include?(king_position)
+          return true
         end
       end
     end
@@ -123,4 +126,14 @@ class Board
     pos.all? { |x| x.between?(0, 7) }
   end
 
+  def update_values
+    @white_value, @black_value = 0, 0
+    @grid.flatten.each do |piece|
+      if piece.color == :white
+        @white_value += MATERIAL_VALUES[piece.to_sym]
+      elsif piece.color == :black
+        @black_value += MATERIAL_VALUES[piece.to_sym]
+      end
+    end
+  end
 end

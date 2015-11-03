@@ -52,4 +52,9 @@ class Piece
   def enemy_of?(color)
     @color != color && @color != nil
   end
+
+  def to_sym
+    class_string = self.class.to_s
+    class_string.to_sym
+  end
 end
