@@ -9,9 +9,9 @@ require_relative 'nil_piece'
 class Board
   attr_accessor :grid
 
-  def initialize
+  def initialize(original = true)
     @grid = Array.new(8) { Array.new(8) { NilPiece.new(nil, nil, nil) } }
-    populate_board
+    populate_board if original
   end
 
   def populate_board
@@ -56,24 +56,43 @@ class Board
 
   def in_check?(color)
     king_position = find_king(color)
-    @grid.each do |row|
-      row.each do |tile|
-        if tile.color != nil && tile.color != color
-          return true if tile.moves.include?(king_position)
+    @grid.each do |rows|
+      rows.each do |piece|
+        if piece.color != nil && piece.color != color
+          return true if piece.moves.include?(king_position)
         end
       end
     end
     false
   end
 
+  def checkmate?(color)
+    if in_check?(color)
+      #and have no moves that take you out of check (true)
+    end
+  end
+
   def find_king(color)
-    @grid.each do |row|
-      row.each do |tile|
-        if tile.class == King && tile.color == color
-          return tile.position
+    @grid.each do |rows|
+      rows.each do |piece|
+        if piece.class == King && piece.color == color
+          return piece.position
         end
       end
     end
+  end
+
+  def dup
+    duped_board = self.class.new(false)
+    @grid.each do |rows|
+      rows.each do |piece|
+        if piece.color != nil
+          duped_piece = piece.dup(duped_board)
+          duped_board[piece.position] = duped_piece
+        end
+      end
+    end
+    duped_board
   end
 
   def [](position)

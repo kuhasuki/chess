@@ -38,4 +38,7 @@ end
 
 b = Board.new
 c = ChessGame.new(b)
-c.run
+d = b.dup
+p b
+p d
+# c.run
