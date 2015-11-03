@@ -11,12 +11,13 @@ class Rook < Piece
     [0, -1]
   ]
 
+  def deltas
+    DELTAS
+  end
+
   def to_s
     icon = "\u2656".encode("utf-8")
     " #{icon} "
   end
 
-  def deltas
-    DELTAS
-  end
 end
