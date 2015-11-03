@@ -19,6 +19,7 @@ class ChessGame
     start = prompt_pos
     start = prompt_pos until piece_at?(start) && my_piece?(start)
     end_pos = prompt_pos
+    end_pos = prompt_pos until end_pos != start
     @board.move(start, end_pos) if @board.valid_move?(start, end_pos)
     rotate_player!
   end
@@ -27,6 +28,7 @@ class ChessGame
     pos = nil
     until pos
       @display.render
+      puts "#{@current_player_color.to_s.capitalize}'s turn now."
       pos = @display.get_input
     end
     pos

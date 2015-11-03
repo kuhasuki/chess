@@ -38,8 +38,8 @@ class Display
 
   def render
     system("clear")
-    puts "Fill the grid!"
-    puts "Arrow keys, WASD, or vim to move, space or enter to confirm."
+    puts "Command Line Chess 2k15"
+    puts "Arrow keys or WASD to move, space or enter to select."
     build_grid.each { |row| puts row.join }
   end
 end
