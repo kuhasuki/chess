@@ -1,20 +1,22 @@
 require_relative 'piece'
+require_relative 'sliding_piece'
 
 class Rook < Piece
-  attr_accessor :position
+  include SlidingPiece
 
-  def initialize(board, position, color = :black)
-    @board = board
-    @position = position
-    @color = color
-  end
-
-  def inspect
-    (self.class).inspect
-  end
+  DELTAS = [
+    [-1, 0],
+    [1, 0],
+    [0, 1],
+    [0, -1]
+  ]
 
   def to_s
     icon = "\u2656".encode("utf-8")
     " #{icon} "
+  end
+
+  def deltas
+    DELTAS
   end
 end
