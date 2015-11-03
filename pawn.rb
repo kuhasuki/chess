@@ -1,6 +1,9 @@
 require_relative 'piece'
 
 class Pawn < Piece
+  BLACK_DELTAS = [[1, -1], [1, 1], [1, 0], [2, 0]]
+  WHITE_DELTAS = [[-1, -1], [-1, 1], [-1, 0], [-2, 0]]
+
   def initialize(board, position, color)
     super
     @first_move_taken = false
@@ -12,15 +15,11 @@ class Pawn < Piece
   end
 
   def moves(pos)
-    if color == :black
-      moves = generate_move_set([[1, -1], [1, 1], [1, 0], [2, 0]])
-    elsif color == :white
-      moves = generate_move_set([[-1, -1], [-1, 1], [-1, 0], [-2, 0]])
-    end
+    deltas = color == :black ? BLACK_DELTAS : WHITE_DELTAS
+    possible_moves = generate_move_set(deltas)
+    valid_moves = valid_for_me(possible_moves)
 
-    valid_for_me(moves).select do |move|
-      move.all? { |coord| coord.between?(0, 7) }
-    end
+    valid_moves.select { |move| in_bound?(move) }
   end
 
   def generate_move_set(deltas)
@@ -46,6 +45,10 @@ class Pawn < Piece
     end
 
     validated_moves
+  end
+
+  def in_bound?(move)
+    move.all? { |coord| coord.between?(0, 7) }
   end
 
   def to_s
