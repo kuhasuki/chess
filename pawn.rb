@@ -18,29 +18,34 @@ class Pawn < Piece
       moves = generate_move_set([[-1, -1], [-1, 1], [-1, 0], [-2, 0]])
     end
 
-    valid_for_me(moves)
+    valid_for_me(moves).select do |move|
+      move.all? { |coord| coord.between?(0, 7) }
+    end
   end
 
   def generate_move_set(deltas)
-    move_set = []
-    deltas.each do |(dx, dy)|
-      new_pos = [cur_x + dx, cur_y + dy]
-      move_set << new_pos if new_pos.all? { |coord| coord.between?(0, 7) }
-    end
-    move_set
+    cur_x, cur_y = @position
+    deltas.map { |(dx, dy)| [cur_x + dx, cur_y + dy] }
   end
 
   def valid_for_me(moves)
     validated_moves = []
-    moves[0..1].each do |diagonal|
-      unless @board[diagonal].color == @color || @board[diagonal].color.nil?
-        validated_moves << diagonal
+
+    moves[0..1].each do |diag|
+      unless @board[diag].color == @color || @board[diag].color.nil?
+        validated_moves << diag
       end
     end
 
-    # if forward 1
-    # if forward 2
-    # return false unless @board[move].color == @color
+    fwd_one = moves[2]
+    validated_moves << fwd_one if @board[fwd_one].color.nil?
+
+    fwd_two = moves[3]
+    if @board[fwd_one].color.nil? && @board[fwd_two].color.nil?
+      validated_moves << fwd_two unless @first_move_taken
+    end
+
+    validated_moves
   end
 
   def to_s
