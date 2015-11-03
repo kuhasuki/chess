@@ -54,6 +54,28 @@ class Board
     possible_moves.include?(end_pos)
   end
 
+  def in_check?(color)
+    king_position = find_king(color)
+    @grid.each do |row|
+      row.each do |tile|
+        if tile.color != nil && tile.color != color
+          return true if tile.moves.include?(king_position)
+        end
+      end
+    end
+    false
+  end
+
+  def find_king(color)
+    @grid.each do |row|
+      row.each do |tile|
+        if tile.class == King && tile.color == color
+          return tile.position
+        end
+      end
+    end
+  end
+
   def [](position)
     row, col = position
     @grid[row][col]
