@@ -3,6 +3,7 @@ require_relative 'piece'
 module SlidingPiece
   def possible_move_set
     possible_move_set = []
+
     cur_x, cur_y = @position
     deltas.each_with_index do |(dx, dy), direction|
       new_pos = [cur_x + dx, cur_y + dy]
@@ -12,6 +13,7 @@ module SlidingPiece
         new_pos = go_forward(new_pos, direction)
       end
     end
+
     possible_move_set
   end
 

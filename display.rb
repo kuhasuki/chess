@@ -4,16 +4,16 @@ require_relative "board"
 
 class Display
   include Cursorable
+  attr_accessor :message
 
   def initialize(board)
     @board = board
     @cursor_pos = [0, 0]
+    @message = ""
   end
 
   def build_grid
-    @board.grid.map.with_index do |row, i|
-      build_row(row, i)
-    end
+    @board.grid.map.with_index { |row, i| build_row(row, i) }
   end
 
   def build_row(row, i)
@@ -40,6 +40,7 @@ class Display
     system("clear")
     puts "Command Line Chess 2k15"
     puts "Arrow keys or WASD to move, space or enter to select."
+    puts "#{@message}"
     build_grid.each { |row| puts row.join }
   end
 end

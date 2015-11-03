@@ -52,7 +52,6 @@ class Board
   end
 
   def move(start, end_pos)
-    raise "No piece at selected starting position" if self[start].nil?
     raise "Invalid move" unless valid_move?(start, end_pos)
 
     move!(start, end_pos)
@@ -65,6 +64,8 @@ class Board
   end
 
   def valid_move?(start, end_pos)
+    return false if start.nil? || end_pos.nil?
+
     piece = self[start]
     piece.moves.include?(end_pos)
   end

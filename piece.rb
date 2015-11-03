@@ -34,22 +34,22 @@ class Piece
   end
 
   def teammate?(move)
-    teammate_of?(@board[move].color)
+    @board[move].color == @color
   end
 
   def enemy?(move)
-    enemy_of?(@board[move].color)
+    @board[move].color != @color && @board[move].color != nil
   end
 
-  def enemy_of?(color)
-    @color != nil && @color != color
+  def empty_tile?(move)
+    @board[move].color.nil?
   end
 
   def teammate_of?(color)
     @color == color
   end
 
-  def empty_tile?(move)
-    @board[move].color.nil?
+  def enemy_of?(color)
+    @color != color && @color != nil
   end
 end

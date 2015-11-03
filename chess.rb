@@ -10,24 +10,36 @@ class ChessGame
   end
 
   def run
-    play_turn until over?
+    until over?
+      play_turn
+      rotate_player!
+    end
     @display.render
-    puts "Game over! #{@current_player_color} loses!"
+    puts "Game over! #{@current_player_color.to_s.capitalize} loses!"
   end
 
   def play_turn
-    start = prompt_pos
-    start = prompt_pos until piece_at?(start) && my_piece?(start)
-    end_pos = prompt_pos
-    end_pos = prompt_pos until end_pos != start
-    @board.move(start, end_pos) if @board.valid_move?(start, end_pos)
-    rotate_player!
+    start, end_pos = nil, nil
+    until @board.valid_move?(start, end_pos)
+      start = prompt_pos
+      start = prompt_pos until piece_at?(start) && my_piece?(start)
+      end_pos = prompt_pos
+      end_pos = prompt_pos until end_pos != start
+    end
+
+    @board.move(start, end_pos)
+  end
+
+  def notify_check
+    puts "#{@current_player_color.to_s.capitalize} is in check!"
   end
 
   def prompt_pos
     pos = nil
     until pos
       @display.render
+      puts 
+      notify_check if @board.in_check?(@current_player_color)
       puts "#{@current_player_color.to_s.capitalize}'s turn now."
       pos = @display.get_input
     end
