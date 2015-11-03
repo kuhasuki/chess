@@ -10,13 +10,13 @@ class Piece
     self.class.new(duped_board, @position.dup, @color)
   end
 
-  def moves(pos)
-    possible_move_set(pos).reject { |move| in_check_moves.include?(move) }
+  def moves
+    possible_move_set.reject { |move| in_check_moves.include?(move) }
   end
 
   def in_check_moves
     in_check_moves = []
-    possible_move_set(@position).each do |move|
+    possible_move_set.each do |move|
       duped_board = @board.dup
       start_pos = @position.dup
       duped_board.move!(start_pos, move)
@@ -34,11 +34,19 @@ class Piece
   end
 
   def teammate?(move)
-    @board[move].color == @color
+    teammate_of?(@board[move].color)
   end
 
   def enemy?(move)
-    @board[move].color != @color && @board[move].color != nil
+    enemy_of?(@board[move].color)
+  end
+
+  def enemy_of?(color)
+    @color != nil && @color != color
+  end
+
+  def teammate_of?(color)
+    @color == color
   end
 
   def empty_tile?(move)

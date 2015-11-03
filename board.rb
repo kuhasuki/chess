@@ -10,7 +10,7 @@ class Board
   attr_accessor :grid
 
   def initialize(original = true)
-    @grid = Array.new(8) { Array.new(8) { NilPiece.new(nil, nil, nil) } }
+    @grid = Array.new(8) { Array.new(8) { NilPiece.new } }
     populate_board if original
   end
 
@@ -18,8 +18,7 @@ class Board
     duped_board = self.class.new(false)
     @grid.each do |rows|
       rows.each do |piece|
-        if piece.color != nil
-          # duped_piece = 
+        unless piece.color.nil?
           duped_board[piece.position] = piece.dup(duped_board)
         end
       end
@@ -61,22 +60,21 @@ class Board
 
   def move!(start, end_pos)
     piece = self[start]
-    self[end_pos], self[start] = piece, NilPiece.new(nil, nil, nil)
+    self[end_pos], self[start] = piece, NilPiece.new
     piece.position = end_pos
   end
 
   def valid_move?(start, end_pos)
     piece = self[start]
-    possible_moves = piece.moves(start)
-    possible_moves.include?(end_pos)
+    piece.moves.include?(end_pos)
   end
 
   def in_check?(color)
     king_position = find_king(color)
     @grid.each do |rows|
       rows.each do |piece|
-        if piece.color != nil && piece.color != color
-          if piece.possible_move_set(piece.position).include?(king_position)
+        if piece.enemy_of?(color)
+          if piece.possible_move_set.include?(king_position)
             return true
           end
         end
@@ -92,8 +90,8 @@ class Board
   def no_moves_left?(color)
     @grid.each do |rows|
       rows.each do |piece|
-        if piece.color == color
-          return false unless piece.moves(piece.position).empty?
+        if piece.teammate_of?(color)
+          return false unless piece.moves.empty?
         end
       end
     end
@@ -103,7 +101,7 @@ class Board
   def find_king(color)
     @grid.each do |rows|
       rows.each do |piece|
-        if piece.class == King && piece.color == color
+        if piece.class == King && piece.teammate_of?(color)
           return piece.position
         end
       end
@@ -123,4 +121,5 @@ class Board
   def in_bounds?(pos)
     pos.all? { |x| x.between?(0, 7) }
   end
+
 end

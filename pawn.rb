@@ -22,7 +22,7 @@ class Pawn < Piece
     @position = pos
   end
 
-  def possible_move_set(pos)
+  def possible_move_set
     deltas = color == :black ? BLACK_DELTAS : WHITE_DELTAS
     cur_x, cur_y = @position
     possible_moves = deltas.map { |(dx, dy)| [cur_x + dx, cur_y + dy] }
