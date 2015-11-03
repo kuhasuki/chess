@@ -1,8 +1,12 @@
 require_relative 'piece'
 
 class King < Piece
-  def initialize(position, color)
+  attr_accessor :position
+
+  def initialize(board, position, color = :black)
+    @board = board
     @position = position
+    @color = color
   end
 
   def inspect
@@ -10,6 +14,7 @@ class King < Piece
   end
 
   def to_s
-    " K "
+    icon = "\u2654".encode("utf-8")
+    " #{icon} "
   end
 end

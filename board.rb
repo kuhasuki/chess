@@ -10,7 +10,7 @@ class Board
   attr_accessor :grid
 
   def initialize
-    @grid = Array.new(8) { Array.new(8) { NilPiece.new } }
+    @grid = Array.new(8) { Array.new(8) { NilPiece.new(nil, nil, nil) } }
     populate_board
   end
 
@@ -23,19 +23,19 @@ class Board
   end
 
   def insert_high_court(row, color)
-    @grid[row][0] = Rook.new([row, 0], color)
-    @grid[row][7] = Rook.new([row, 7], color)
-    @grid[row][1] = Knight.new([row, 1], color)
-    @grid[row][6] = Knight.new([row, 6], color)
-    @grid[row][2] = Bishop.new([row, 2], color)
-    @grid[row][5] = Bishop.new([row, 5], color)
-    @grid[row][3] = Queen.new([row, 3], color)
-    @grid[row][4] = King.new([row, 4], color)
+    @grid[row][0] = Rook.new(self, [row, 0], color)
+    @grid[row][7] = Rook.new(self, [row, 7], color)
+    @grid[row][1] = Knight.new(self, [row, 1], color)
+    @grid[row][6] = Knight.new(self, [row, 6], color)
+    @grid[row][2] = Bishop.new(self, [row, 2], color)
+    @grid[row][5] = Bishop.new(self, [row, 5], color)
+    @grid[row][3] = Queen.new(self, [row, 3], color)
+    @grid[row][4] = King.new(self, [row, 4], color)
   end
 
   def insert_pawns(row, color)
     (0..7).each do |col|
-      @grid[row][col] = Pawn.new([row, col], color)
+      @grid[row][col] = Pawn.new(self, [row, col], color)
     end
   end
 
@@ -44,7 +44,7 @@ class Board
     raise "Invalid move" unless valid_move?(start, end_pos)
 
     piece = self[start]
-    self[end_pos], self[start] = piece, NilPiece.new
+    self[end_pos], self[start] = piece, NilPiece.new(nil, nil, nil)
     piece.position = end_pos
   end
 
