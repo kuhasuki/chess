@@ -22,7 +22,4 @@ module SteppingPiece
   def teammate?(move)
     @board[move].color == @color
   end
-
-  def deltas
-  end
 end

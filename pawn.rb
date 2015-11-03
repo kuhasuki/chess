@@ -1,7 +1,6 @@
 require_relative 'piece'
 
 class Pawn < Piece
-
   attr_accessor :first_move_taken
 
   BLACK_DELTAS = [[1, -1], [1, 1], [1, 0], [2, 0]]

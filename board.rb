@@ -19,8 +19,8 @@ class Board
     @grid.each do |rows|
       rows.each do |piece|
         if piece.color != nil
-          duped_piece = piece.dup(duped_board)
-          duped_board[piece.position] = duped_piece
+          # duped_piece = 
+          duped_board[piece.position] = piece.dup(duped_board)
         end
       end
     end

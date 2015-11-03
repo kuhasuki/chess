@@ -20,4 +20,5 @@ class Bishop < Piece
     " #{icon} "
   end
 
+
 end

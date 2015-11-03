@@ -1,7 +1,6 @@
 require_relative 'piece'
 
 module SlidingPiece
-
   def possible_move_set(pos)
     possible_move_set = []
     cur_x, cur_y = pos
@@ -28,9 +27,6 @@ module SlidingPiece
     move.all? { |coord| coord.between?(0, 7) }
   end
 
-  def deltas
-  end
-
   def enemy?(move)
     @board[move].color != @color && @board[move].color != nil
   end
@@ -40,5 +36,4 @@ module SlidingPiece
     cur_x, cur_y = move
     [cur_x + dx, cur_y + dy]
   end
-
 end
