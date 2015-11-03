@@ -10,16 +10,4 @@ module SteppingPiece
     end
     possible_move_set
   end
-
-  def valid_move?(move)
-    in_bound?(move) && !teammate?(move)
-  end
-
-  def in_bound?(move)
-    move.all? { |coord| coord.between?(0, 7) }
-  end
-
-  def teammate?(move)
-    @board[move].color == @color
-  end
 end

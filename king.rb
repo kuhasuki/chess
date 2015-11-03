@@ -4,19 +4,15 @@ require_relative 'stepping_piece'
 class King < Piece
   include SteppingPiece
 
-  DELTAS = [
-    [-1, -1],
-    [-1,  0],
-    [-1, 1],
-    [ 0,  -1],
-    [ 0, 1],
-    [ 1,  -1],
-    [ 1, 0],
-    [ 1,  1]
-  ]
-
   def deltas
-    DELTAS
+    [[-1, -1],
+      [-1,  0],
+      [-1, 1],
+      [ 0,  -1],
+      [ 0, 1],
+      [ 1,  -1],
+      [ 1, 0],
+      [ 1,  1]]
   end
 
   def to_s

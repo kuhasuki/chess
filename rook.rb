@@ -4,15 +4,11 @@ require_relative 'sliding_piece'
 class Rook < Piece
   include SlidingPiece
 
-  DELTAS = [
-    [-1, 0],
-    [1, 0],
-    [0, 1],
-    [0, -1]
-  ]
-
   def deltas
-    DELTAS
+    [[-1, 0],
+      [1, 0],
+      [0, 1],
+      [0, -1]]
   end
 
   def to_s

@@ -24,45 +24,35 @@ class Pawn < Piece
 
   def possible_move_set(pos)
     deltas = color == :black ? BLACK_DELTAS : WHITE_DELTAS
-    possible_moves = generate_move_set(deltas)
-    valid_moves = valid_for_me(possible_moves)
-
-    valid_moves.select { |move| in_bound?(move) }
-  end
-
-  def generate_move_set(deltas)
     cur_x, cur_y = @position
-    deltas.map { |(dx, dy)| [cur_x + dx, cur_y + dy] }
+    possible_moves = deltas.map { |(dx, dy)| [cur_x + dx, cur_y + dy] }
+
+    valid_for_pawn(possible_moves)
   end
 
-  def valid_for_me(moves)
-    validated_moves = []
+  def valid_for_pawn(moves)
+    diagonals, forwards = moves[0..1], moves[2..3]
+    valid_diagonals(diagonals) + valid_forwards(forwards)
+  end
 
-    moves[0..1].each do |diagonal|
-      if in_bound?(diagonal)
-        if enemy?(diagonal)
-          validated_moves << diagonal
-        end
-      end
+  def valid_diagonals(diagonals)
+    diagonals.select { |diag| in_bound?(diag) && enemy?(diag) }
+  end
+
+  def valid_forwards(forwards)
+    valid_forwards = []
+
+    fwd1 = forwards.first
+    if in_bound?(fwd1) && empty_tile?(fwd1)
+      valid_forwards << fwd1
     end
 
-    fwd_one = moves[2]
-    validated_moves << fwd_one if @board[fwd_one].color.nil?
-
-    fwd_two = moves[3]
-    if @board[fwd_one].color.nil? && @board[fwd_two].color.nil?
-      validated_moves << fwd_two unless @first_move_taken
+    fwd2 = forwards.last
+    if in_bound?(fwd2) && empty_tile?(fwd1) && empty_tile?(fwd2)
+      valid_forwards << fwd2 unless @first_move_taken
     end
 
-    validated_moves
-  end
-
-  def enemy?(move)
-    @board[move].color != @color && !@board[move].color.nil?
-  end
-
-  def in_bound?(move)
-    move.all? { |coord| coord.between?(0, 7) }
+    valid_forwards
   end
 
   def to_s
