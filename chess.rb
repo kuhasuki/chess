@@ -10,23 +10,26 @@ class ChessGame
   end
 
   def run
-    until over?
-      start = prompt_pos
-      end_pos = prompt_pos
-      @board.move(start, end_pos) if @board.valid_move?(start, end_pos)
-      rotate_player!
-    end
+    play_turn until over?
     @display.render
     puts "Game over! #{@current_player_color} loses!"
   end
 
+  def play_turn
+    start = prompt_pos
+    start = prompt_pos until piece_at?(start) && my_piece?(start)
+    end_pos = prompt_pos
+    @board.move(start, end_pos) if @board.valid_move?(start, end_pos)
+    rotate_player!
+  end
+
   def prompt_pos
-    result = nil
-    until result
+    pos = nil
+    until pos
       @display.render
-      result = @display.get_input
+      pos = @display.get_input
     end
-    result
+    pos
   end
 
   def over?
@@ -40,7 +43,17 @@ class ChessGame
       @current_player_color = :black
     end
   end
+
+  def piece_at?(pos)
+    @board[pos].class != NilPiece
+  end
+
+  def my_piece?(pos)
+    @board[pos].color == @current_player_color
+  end
+
 end
+
 
 b = Board.new
 c = ChessGame.new(b)
