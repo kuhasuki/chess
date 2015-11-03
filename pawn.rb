@@ -30,10 +30,8 @@ class Pawn < Piece
   def valid_for_me(moves)
     validated_moves = []
 
-    moves[0..1].each do |diag|
-      unless @board[diag].color == @color || @board[diag].color.nil?
-        validated_moves << diag
-      end
+    moves[0..1].each do |diagonal|
+      validated_moves << diagonal if enemy?(diagonal)
     end
 
     fwd_one = moves[2]
@@ -45,6 +43,10 @@ class Pawn < Piece
     end
 
     validated_moves
+  end
+
+  def enemy?(move)
+    @board[move].color != @color && !@board[move].color.nil?
   end
 
   def in_bound?(move)
