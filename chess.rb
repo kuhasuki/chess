@@ -16,7 +16,8 @@ class ChessGame
       @board.move(start, end_pos) if @board.valid_move?(start, end_pos)
       rotate_player!
     end
-    puts "Game over!"
+    @display.render
+    puts "Game over! #{@current_player_color} loses!"
   end
 
   def prompt_pos
@@ -33,7 +34,11 @@ class ChessGame
   end
 
   def rotate_player!
-
+    if @current_player_color == :black
+      @current_player_color = :white
+    else
+      @current_player_color = :black
+    end
   end
 end
 
