@@ -1,6 +1,9 @@
 require_relative 'piece'
 
 class Pawn < Piece
+
+  attr_accessor :first_move_taken
+
   BLACK_DELTAS = [[1, -1], [1, 1], [1, 0], [2, 0]]
   WHITE_DELTAS = [[-1, -1], [-1, 1], [-1, 0], [-2, 0]]
 
@@ -9,12 +12,18 @@ class Pawn < Piece
     @first_move_taken = false
   end
 
+  def dup(duped_board)
+    duped_pawn = self.class.new(duped_board, @position.dup, @color)
+    duped_pawn.first_move_taken = @first_move_taken
+    duped_pawn
+  end
+
   def position=(pos)
     @first_move_taken = true
     @position = pos
   end
 
-  def moves(pos)
+  def possible_move_set(pos)
     deltas = color == :black ? BLACK_DELTAS : WHITE_DELTAS
     possible_moves = generate_move_set(deltas)
     valid_moves = valid_for_me(possible_moves)
@@ -31,7 +40,11 @@ class Pawn < Piece
     validated_moves = []
 
     moves[0..1].each do |diagonal|
-      validated_moves << diagonal if enemy?(diagonal)
+      if in_bound?(diagonal)
+        if enemy?(diagonal)
+          validated_moves << diagonal
+        end
+      end
     end
 
     fwd_one = moves[2]

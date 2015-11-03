@@ -2,18 +2,18 @@ require_relative 'piece'
 
 module SlidingPiece
 
-  def moves(pos)
-    moves = []
+  def possible_move_set(pos)
+    possible_move_set = []
     cur_x, cur_y = pos
     deltas.each_with_index do |(dx, dy), direction|
       new_pos = [cur_x + dx, cur_y + dy]
       while valid_move?(new_pos)
-        moves << new_pos
+        possible_move_set << new_pos
         break if enemy?(new_pos)
         new_pos = go_forward(new_pos, direction)
       end
     end
-    moves
+    possible_move_set
   end
 
   def valid_move?(move)

@@ -14,6 +14,19 @@ class Board
     populate_board if original
   end
 
+  def dup
+    duped_board = self.class.new(false)
+    @grid.each do |rows|
+      rows.each do |piece|
+        if piece.color != nil
+          duped_piece = piece.dup(duped_board)
+          duped_board[piece.position] = duped_piece
+        end
+      end
+    end
+    duped_board
+  end
+
   def populate_board
     insert_high_court(0, :black)
     insert_pawns(1, :black)
@@ -43,6 +56,10 @@ class Board
     raise "No piece at selected starting position" if self[start].nil?
     raise "Invalid move" unless valid_move?(start, end_pos)
 
+    move!(start, end_pos)
+  end
+
+  def move!(start, end_pos)
     piece = self[start]
     self[end_pos], self[start] = piece, NilPiece.new(nil, nil, nil)
     piece.position = end_pos
@@ -59,7 +76,9 @@ class Board
     @grid.each do |rows|
       rows.each do |piece|
         if piece.color != nil && piece.color != color
-          return true if piece.moves.include?(king_position)
+          if piece.possible_move_set(piece.position).include?(king_position)
+            return true
+          end
         end
       end
     end
@@ -67,9 +86,18 @@ class Board
   end
 
   def checkmate?(color)
-    if in_check?(color)
-      #and have no moves that take you out of check (true)
+    in_check?(color) && no_moves_left?(color)
+  end
+
+  def no_moves_left?(color)
+    @grid.each do |rows|
+      rows.each do |piece|
+        if piece.color == color
+          return false unless piece.moves(piece.position).empty?
+        end
+      end
     end
+    true
   end
 
   def find_king(color)
@@ -80,19 +108,6 @@ class Board
         end
       end
     end
-  end
-
-  def dup
-    duped_board = self.class.new(false)
-    @grid.each do |rows|
-      rows.each do |piece|
-        if piece.color != nil
-          duped_piece = piece.dup(duped_board)
-          duped_board[piece.position] = duped_piece
-        end
-      end
-    end
-    duped_board
   end
 
   def [](position)

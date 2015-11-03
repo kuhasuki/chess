@@ -16,6 +16,7 @@ class ChessGame
       @board.move(start, end_pos) if @board.valid_move?(start, end_pos)
       rotate_player!
     end
+    puts "Game over!"
   end
 
   def prompt_pos
@@ -28,7 +29,7 @@ class ChessGame
   end
 
   def over?
-    false
+    @board.checkmate?(@current_player_color)
   end
 
   def rotate_player!
@@ -38,7 +39,7 @@ end
 
 b = Board.new
 c = ChessGame.new(b)
-d = b.dup
-p b
-p d
-# c.run
+# d = b.dup
+# p b
+# p d
+c.run
