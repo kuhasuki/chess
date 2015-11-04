@@ -51,7 +51,12 @@ class ChessGame
   end
 end
 
+if __FILE__ == $PROGRAM_NAME
+  board = Board.new
 
-b = Board.new
-c = ChessGame.new(b, "human", "computer")
-c.run
+  print "Enter opponent ('human' or 'computer'): "
+  opponent = gets.chomp
+
+  game = ChessGame.new(board, "human", opponent)
+  game.run
+end
