@@ -1,6 +1,7 @@
 require_relative 'board'
 require_relative 'display'
 require_relative 'human_player'
+require_relative 'computer_player'
 
 class ChessGame
   attr_reader :display
@@ -47,5 +48,5 @@ end
 
 
 b = Board.new
-c = ChessGame.new(b, "human", "human")
+c = ChessGame.new(b, "human", "computer")
 c.run

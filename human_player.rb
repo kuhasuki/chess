@@ -1,4 +1,3 @@
-require_relative 'board'
 
 class HumanPlayer
   attr_reader :color
