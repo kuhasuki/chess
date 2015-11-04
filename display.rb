@@ -47,7 +47,9 @@ class Display
     system("clear")
     puts "Command Line Chess 2k15"
     puts "Arrow keys or WASD to move, space or enter to select."
+    puts
     puts "#{render_message}"
+    puts
     build_grid.each { |row| puts row.join }
   end
 end

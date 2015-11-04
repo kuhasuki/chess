@@ -1,9 +1,9 @@
-# remember to pass current player to Display.rb to set default cursor position
 require_relative 'board'
 require_relative 'display'
+require_relative 'human_player'
 
 class ChessGame
-  def initialize(board)
+  def initialize(board, player1, player2)
     @board = board
     @display = Display.new(@board)
     @current_player_color = :black
@@ -11,6 +11,7 @@ class ChessGame
 
   def run
     until over?
+      @board.update_values
       play_turn
       rotate_player!
     end
@@ -38,7 +39,7 @@ class ChessGame
     pos = nil
     until pos
       @display.render
-      puts 
+      puts
       notify_check if @board.in_check?(@current_player_color)
       puts "#{@current_player_color.to_s.capitalize}'s turn now."
       pos = @display.get_input
@@ -65,13 +66,11 @@ class ChessGame
   def my_piece?(pos)
     @board[pos].color == @current_player_color
   end
-
 end
 
 
 b = Board.new
-c = ChessGame.new(b)
-# d = b.dup
-# p b
-# p d
+p1 = HumanPlayer.new(b)
+p2 = HumanPlayer.new(b)
+c = ChessGame.new(b, p1, p2)
 c.run

@@ -9,23 +9,21 @@ require_relative 'nil_piece'
 class Board
   attr_accessor :grid, :black_value, :white_value
 
-  MATERIAL_VALUES = {Pawn: 1, Bishop: 3, Knight: 3, Rook: 5, Queen: 9, King: 0}
+  MATERIAL_VALUES = {
+    Pawn: 1, Bishop: 3, Knight: 3, Rook: 5, Queen: 9, King: 0
+  }
 
   def initialize(original = true)
     @grid = Array.new(8) { Array.new(8) { NilPiece.new } }
     @black_value, @white_value = 0, 0
-    if original
-      populate_board
-      update_values
-    end
+    populate_board if original
   end
 
   def dup
     duped_board = self.class.new(false)
     @grid.flatten.each do |piece|
-      unless piece.color.nil?
-        duped_board[piece.position] = piece.dup(duped_board)
-      end
+      next if piece.color.nil?
+      duped_board[piece.position] = piece.dup(duped_board)
     end
     duped_board
   end
@@ -65,24 +63,19 @@ class Board
     piece = self[start]
     self[end_pos], self[start] = piece, NilPiece.new
     piece.position = end_pos
-    update_values
   end
 
   def valid_move?(start, end_pos)
     return false if start.nil? || end_pos.nil?
 
-    piece = self[start]
-    piece.moves.include?(end_pos)
+    self[start].moves.include?(end_pos)
   end
 
   def in_check?(color)
     king_position = find_king(color)
     @grid.flatten.each do |piece|
-      if piece.enemy_of?(color)
-        if piece.possible_move_set.include?(king_position)
-          return true
-        end
-      end
+      next unless piece.enemy_of?(color)
+      return true if piece.possible_move_set.include?(king_position)
     end
     false
   end
@@ -92,24 +85,21 @@ class Board
   end
 
   def no_moves_left?(color)
-    @grid.each do |rows|
-      rows.each do |piece|
-        if piece.teammate_of?(color)
-          return false unless piece.moves.empty?
-        end
-      end
+    @grid.flatten.each do |piece|
+      next unless piece.teammate_of?(color)
+      return false unless piece.moves.empty?
     end
     true
   end
 
   def find_king(color)
-    @grid.each do |rows|
-      rows.each do |piece|
-        if piece.class == King && piece.teammate_of?(color)
-          return piece.position
-        end
-      end
+    @grid.flatten.each do |piece|
+      return piece.position if own_king?(piece, color)
     end
+  end
+
+  def own_king?(piece, color)
+    piece.class == King && piece.teammate_of?(color)
   end
 
   def [](position)
