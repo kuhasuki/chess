@@ -65,6 +65,33 @@ class Board
     piece.position = end_pos
   end
 
+  def update_values
+    @white_value, @black_value = 0, 0
+    @grid.flatten.each do |piece|
+      if piece.color == :white
+        @white_value += MATERIAL_VALUES[piece.to_sym]
+      elsif piece.color == :black
+        @black_value += MATERIAL_VALUES[piece.to_sym]
+      end
+    end
+  end
+
+  def find_king(color)
+    @grid.flatten.each do |piece|
+      return piece.position if own_king?(piece, color)
+    end
+  end
+
+  def [](position)
+    row, col = position
+    @grid[row][col]
+  end
+
+  def []=(position, piece)
+    row, col = position
+    @grid[row][col] = piece
+  end
+
   def valid_move?(start, end_pos)
     return false if start.nil? || end_pos.nil?
 
@@ -84,6 +111,10 @@ class Board
     in_check?(color) && no_moves_left?(color)
   end
 
+  def stalemate?(color)
+    no_moves_left?(color)
+  end
+
   def no_moves_left?(color)
     @grid.flatten.each do |piece|
       next unless piece.teammate_of?(color)
@@ -92,38 +123,11 @@ class Board
     true
   end
 
-  def find_king(color)
-    @grid.flatten.each do |piece|
-      return piece.position if own_king?(piece, color)
-    end
-  end
-
   def own_king?(piece, color)
     piece.class == King && piece.teammate_of?(color)
   end
 
-  def [](position)
-    row, col = position
-    @grid[row][col]
-  end
-
-  def []=(position, piece)
-    row, col = position
-    @grid[row][col] = piece
-  end
-
   def in_bounds?(pos)
     pos.all? { |x| x.between?(0, 7) }
-  end
-
-  def update_values
-    @white_value, @black_value = 0, 0
-    @grid.flatten.each do |piece|
-      if piece.color == :white
-        @white_value += MATERIAL_VALUES[piece.to_sym]
-      elsif piece.color == :black
-        @black_value += MATERIAL_VALUES[piece.to_sym]
-      end
-    end
   end
 end
