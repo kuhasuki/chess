@@ -53,5 +53,5 @@ end
 
 
 b = Board.new
-c = ChessGame.new(b, "computer", "computer")
+c = ChessGame.new(b, "human", "computer")
 c.run
